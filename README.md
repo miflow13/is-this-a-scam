@@ -124,3 +124,9 @@ The official prompt asks for a new project with open-source AI at its core, buil
 Once the model is downloaded, local inference lets you analyze a screenshot without sending its contents to a remote model provider. That ownership and privacy rationale is central to this project, along with the explicit uncertainty verdict.
 
 MIT licensed. The Ollama model has its own license and terms; see [Gemma on Ollama](https://ollama.com/library/gemma3).
+
+## Pause before you act
+
+The page puts an independently verified next step before the generated explanation. The model describes the message’s request and any pressure visible in its wording. Uncertain results explain what is visible and what evidence is missing; missing information alone is not a scam indicator. The four-field response and three verdicts stay deliberately small.
+
+Before handing this to your intended friend or loved one, try the delivery-fee, ambiguous-message, and ordinary-notification fixtures together. Ask what they think the message wants, what they would do next, and which wording was confusing. Record their actual feedback in the submission; do not invent a recipient or testimonial. This MVP needs someone to set up Node and Ollama on the computer running it.

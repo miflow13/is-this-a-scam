@@ -26,7 +26,7 @@ export const analysisSchema = {
     summary: { type: "string", minLength: 1, maxLength: 1200 },
     redFlags: {
       type: "array",
-      maxItems: 8,
+      maxItems: 4,
       items: { type: "string", minLength: 1, maxLength: 300 },
     },
     recommendedAction: { type: "string", minLength: 1, maxLength: 1200 },
@@ -81,7 +81,7 @@ export function parseAnalysis(value: unknown): Analysis {
   return {
     verdict: obj.verdict,
     summary: obj.summary.trim(),
-    redFlags: obj.redFlags.map((flag) => flag.trim()),
+    redFlags: obj.verdict === "uncertain" ? [] : obj.redFlags.slice(0, 4).map((flag) => flag.trim()),
     recommendedAction: actions[obj.verdict],
   };
 }
@@ -94,7 +94,7 @@ VERDICT RULES:
 2. Choose likely_scam only for concrete visible scam tactics: requests to reveal passwords/card details/security codes through a message, payment demands combined with a threat or lure, or similar explicit attempts to obtain money or sensitive information. If an incomplete image already clearly shows such a tactic, you may identify it.
 3. Choose no_obvious_red_flags for a fully readable routine informational message without visible scam tactics, sensitive requests, suspicious actions, or important missing context. This never proves legitimacy or sender identity. Ordinary appointment reminders and requests to arrive early are not scam tactics by themselves.
 
-EXPLANATION: Summary describes what the message asks the recipient to do; it must not instruct the recipient to do it. redFlags contains only specific observed scam indicators, preferably citing short visible wording. Write each flag as a short plain English sentence with spaces, never an underscored label, category tag, or technical jargon. Use at most four distinct flags; do not repeat them or pad the list with generic suspicions. For uncertainty, describe the missing context in summary; do not invent red flags. For no_obvious_red_flags, use an empty redFlags array.
+EXPLANATION: Summary describes what the message asks the recipient to do; it must not instruct the recipient to do it. redFlags contains only specific observed scam indicators, preferably citing short visible wording. Write each flag as a short plain English sentence with spaces, never an underscored label, category tag, or technical jargon. Use at most four distinct flags; do not repeat them or pad the list with generic suspicions. When visible wording uses urgency, threats, a small fee, or a reward to push someone to act, explain that pressure in a red flag using everyday language and quote the relevant wording. Do not infer hidden intent or pressure from an ordinary deadline alone. For uncertainty, always use an empty redFlags array. Do not claim that text is cropped or cut off unless the image visibly truncates it. An unexplained request can be fully readable; say the purpose of the request is unknown instead. Summary must first describe the visible request, then identify the specific missing evidence that prevents a clear call (for example unreadable text, a cropped sender address, or unexplained context). Never claim evidence is missing when it is visible. Do not invent red flags. For no_obvious_red_flags, use an empty redFlags array.
 
 CAUTION: Prefer uncertain over false reassurance. Never call a message safe, verified, trusted, or legitimate. Never advise clicking, replying, paying, or calling using details from the message. Suggest independently opening an official app/site or asking someone the recipient trusts. Return only JSON matching the supplied schema. No markdown or confidence scores.`;
 export async function analyzeImage(

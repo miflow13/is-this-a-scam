@@ -12,7 +12,7 @@ for (const [verdict, label] of results)
       route.fulfill({
         json: {
           verdict,
-          summary: "It asks you to pay a fee.",
+          summary: verdict === "uncertain" ? "It asks you to pay a fee, but the sender address is cropped out." : "It asks you to pay a fee.",
           redFlags:
             verdict === "no_obvious_red_flags"
               ? []
@@ -28,7 +28,10 @@ for (const [verdict, label] of results)
     await expect(
       page.getByRole("heading", { name: label, exact: true }),
     ).toBeVisible();
-    await expect(page.getByText("It asks you to pay a fee.")).toBeVisible();
+    await expect(page.getByText(verdict === "uncertain" ? "It asks you to pay a fee, but the sender address is cropped out." : "It asks you to pay a fee.")).toBeVisible();
+    const headings = await page.locator(".result h3").allTextContents();
+    expect(headings[0]).toBe("What to do next");
+    if (verdict === "uncertain") expect(headings[1]).toBe("What we can see — and what’s missing");
     await expect(
       page.getByText(/does not prove legitimacy/).first(),
     ).toBeVisible();

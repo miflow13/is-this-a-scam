@@ -63,7 +63,7 @@ const labels: Record<Verdict, string> = {
 };
 const hints: Record<Verdict, string> = {
   likely_scam: "Pause before doing anything.",
-  uncertain: "A little more checking is needed.",
+  uncertain: "There isn’t enough evidence to make a clear call.",
   no_obvious_red_flags: "This still does not prove legitimacy.",
 };
 const disclaimer =
@@ -189,15 +189,14 @@ export default function Page() {
         <section className="intro" aria-labelledby="page-title">
           <div className="eyebrow">
             <span />
-            PAUSE. CHECK. PROTECT.
+            A SECOND LOOK, BEFORE YOU ACT
           </div>
           <h1 id="page-title">
-            Something feel <span>off?</span>
+            Before you click, <span>take a second look.</span>
           </h1>
           <p>
-            Let’s take a look together. Share a screenshot of a message
-            <br className="desktop-break" /> and get a little help deciding what
-            to do next.
+            Feeling rushed or worried by a message? Share a screenshot.
+            <br className="desktop-break" /> We’ll help you pause, understand it, and check another way.
           </p>
           <div className="message-types">
             <span>Email</span>
@@ -372,7 +371,7 @@ export default function Page() {
                 <span>2</span>
                 <div>
                   <h3>Read the explanation</h3>
-                  <p>See what it’s asking for and what looks suspicious.</p>
+                  <p>Understand what it wants and how it may be pressuring you.</p>
                 </div>
               </li>
               <li>
@@ -408,10 +407,17 @@ export default function Page() {
                 <p>{hints[result.verdict]}</p>
               </div>
             </div>
+            <div className="next-step">
+              <span className="next-step-icon" aria-hidden="true">↗</span>
+              <h3>What to do next</h3>
+              <p>{result.recommendedAction}</p>
+            </div>
             <div className="result-details">
               <div>
-                <h3>What this message wants</h3>
+                <h3>{result.verdict === "uncertain" ? "What we can see — and what’s missing" : "What this message wants"}</h3>
                 <p>{result.summary}</p>
+              </div>
+              <div>
                 <h3>What stood out</h3>
                 {result.redFlags.length ? (
                   <ul>
@@ -420,18 +426,10 @@ export default function Page() {
                     ))}
                   </ul>
                 ) : (
-                  <p>
-                    No specific red flags were identified. That does not prove
-                    the message is legitimate.
-                  </p>
+                  <p>{result.verdict === "uncertain"
+                    ? "We haven’t identified a specific scam tactic. Missing information is a reason to pause and check, not proof of a scam."
+                    : "No specific red flags were identified. That does not prove the message is legitimate."}</p>
                 )}
-              </div>
-              <div className="next-step">
-                <span className="next-step-icon" aria-hidden="true">
-                  ↗
-                </span>
-                <h3>What to do next</h3>
-                <p>{result.recommendedAction}</p>
               </div>
             </div>
             {result.verdict === "no_obvious_red_flags" && (

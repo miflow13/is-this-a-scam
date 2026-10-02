@@ -104,3 +104,15 @@ test("generated reassurance and contradictory low-risk verdicts fall back to unc
     "uncertain",
   );
 });
+
+test("uncertainty does not present missing context as scam indicators", () => {
+  const result = parseAnalysis({
+    ...valid,
+    verdict: "uncertain",
+    summary: "It asks for help today, but does not explain what help is needed.",
+    redFlags: ["Unknown sender", "Missing context"],
+  });
+  assert.deepEqual(result.redFlags, []);
+  assert.match(result.summary, /does not explain/);
+  assert.match(result.recommendedAction, /Ask someone you trust/);
+});
