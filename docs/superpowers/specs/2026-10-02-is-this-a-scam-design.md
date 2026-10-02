@@ -8,7 +8,7 @@ Build a single Next.js page and POST /api/analyze. Use local Ollama at http://lo
 
 ## User experience
 
-Use approachable language, generous spacing, large readable text, clear focus states, and responsive layout. A native file picker provides a keyboard-accessible alternative to drag and drop. Accept one PNG, JPEG, or WebP screenshot up to 8 MiB; reject unsupported, empty, or oversized uploads with understandable messages. Show a preview and an explicit “Check this message” button. Prevent duplicate submissions while analyzing. Let the user replace or clear the screenshot; clear stale results when the image changes.
+Use approachable language, generous spacing, large readable text, clear focus states, and responsive layout. The user subsequently requested a security-focused visual theme: deep navy, clear blue accents, stronger sans-serif typography, and shield-based visuals. A native file picker provides a keyboard-accessible alternative to drag and drop. Accept one PNG, JPEG, or WebP screenshot up to 8 MiB; reject unsupported, empty, or oversized uploads with understandable messages. Show a preview and an explicit “Check this message” button. Prevent duplicate submissions while analyzing. Let the user replace or clear the screenshot; clear stale results when the image changes.
 
 Render exactly three verdict labels:
 

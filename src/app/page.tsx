@@ -18,7 +18,7 @@ function Shield({ className = "" }: { className?: string }) {
         strokeLinejoin="round"
       />
       <path
-        d="m17 24 5 5 10-11"
+        d="M24 17v9m0 6h.01"
         stroke="currentColor"
         strokeWidth="2.5"
         strokeLinecap="round"
@@ -188,7 +188,8 @@ export default function Page() {
       <main>
         <section className="intro" aria-labelledby="page-title">
           <div className="eyebrow">
-            <span />A SECOND LOOK, WITH CARE
+            <span />
+            PAUSE. CHECK. PROTECT.
           </div>
           <h1 id="page-title">
             Something feel <span>off?</span>
@@ -276,8 +277,6 @@ export default function Page() {
                 <>
                   <div className="upload-symbol">
                     <UploadIcon />
-                    <span className="spark spark-one">✦</span>
-                    <span className="spark spark-two">✧</span>
                   </div>
                   <h2>Drop your screenshot here</h2>
                   <p>Or choose one from your photos.</p>
@@ -350,13 +349,9 @@ export default function Page() {
           </div>
           <aside className="guide-column" aria-labelledby="guide-title">
             <div className="guide-illustration" aria-hidden="true">
-              <div className="note-paper">
-                <span />
-                <span />
-                <span />
-                <i>?</i>
+              <div className="security-emblem">
+                <Shield />
               </div>
-              <span className="small-star">✦</span>
             </div>
             <h2 id="guide-title">
               A pause can make <br />

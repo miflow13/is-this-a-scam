@@ -2,6 +2,8 @@
 
 A tiny local web app for the person who sends you a screenshot and asks, “Does this look suspicious?” Drop in a screenshot of an email, text, or DM. Get a plain-language explanation of what it wants you to do, observable red flags, and a cautious next step.
 
+![The local screenshot checker](docs/app-preview.png)
+
 **Uncertainty is a safety feature.** The app uses exactly three verdicts:
 
 - **Likely scam** — clear scam indicators were found.
@@ -111,7 +113,7 @@ With the app and Ollama running, test real screenshot inference:
 npm run check:local-model
 ```
 
-This sends the delivery-fee, ordinary-notification, ambiguous-message, and embedded-instruction fixtures through the same endpoint the browser uses. It prints observed verdicts and explanations; it does not claim an accuracy score. See [verification notes](docs/verification.md) for what was actually tested.
+This sends the delivery-fee, ordinary-notification, ambiguous-message, and embedded-instruction fixtures through the same endpoint the browser uses. It prints observed verdicts and explanations and checks a small set of expected fixture behaviors, returning a nonzero exit on a mismatch; it does not claim an accuracy score. See [verification notes](docs/verification.md) for what was actually tested.
 
 ## Weekend scope
 
