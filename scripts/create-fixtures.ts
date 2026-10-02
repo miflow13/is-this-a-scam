@@ -57,7 +57,7 @@ const samples = [
 for (const sample of samples) {
   const escape = (s: string) =>
     s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const svg = `<svg width="1000" height="820" xmlns="http://www.w3.org/2000/svg"><rect width="1000" height="820" fill="#f4f5f7"/><rect x="40" y="50" width="920" height="720" rx="22" fill="white"/><text x="80" y="110" font-family="sans-serif" font-size="22" fill="#596273">SYNTHETIC EXAMPLE • No real personal information</text><text x="80" y="175" font-family="sans-serif" font-size="27" fill="#596273">${escape(sample.sender)}</text><text x="80" y="245" font-family="sans-serif" font-weight="bold" font-size="36" fill="#182028">${escape(sample.subject)}</text>${sample.lines.map((line, i) => `<text x="80" y="${325 + i * 48}" font-family="sans-serif" font-size="29" fill="#182028">${escape(line)}</text>`).join("")}</svg>`;
+  const svg = `<svg width="1000" height="820" xmlns="http://www.w3.org/2000/svg"><rect width="1000" height="820" fill="#f4f5f7"/><rect x="40" y="50" width="920" height="720" rx="22" fill="white"/><text x="80" y="110" font-family="sans-serif" font-size="22" fill="#596273">Messages</text><text x="80" y="175" font-family="sans-serif" font-size="27" fill="#596273">${escape(sample.sender)}</text><text x="80" y="245" font-family="sans-serif" font-weight="bold" font-size="36" fill="#182028">${escape(sample.subject)}</text>${sample.lines.map((line, i) => `<text x="80" y="${325 + i * 48}" font-family="sans-serif" font-size="29" fill="#182028">${escape(line)}</text>`).join("")}</svg>`;
   await sharp(Buffer.from(svg))
     .png()
     .toFile(`tests/fixtures/${sample.name}.png`);

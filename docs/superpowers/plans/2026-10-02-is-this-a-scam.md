@@ -40,13 +40,13 @@
 - `analyzeImage(bytes: Buffer, fetchImpl: typeof fetch = fetch): Promise<Analysis>` calls Ollama.
 - `POST(request: Request): Promise<Response>` accepts multipart form field `image`; returns Analysis on success or `{ error: string }` with an appropriate non-2xx status.
 
-- [ ] Set up a minimal Next.js TypeScript project and scripts for development on 127.0.0.1, production build, type checking, and focused tests. Use sharp for actual image decoding and dimensions rather than trusting MIME headers alone.
-- [ ] Write failing tests: `rejectsUnknownVerdict` asserts “safe” is rejected; `rejectsExtraFields` asserts extra properties fail; `replacesGeneratedAction` asserts returned action is reviewed text; `rejectsInvalidShape` covers missing, empty, and oversized fields. Bound summary/action to 1,200 characters, redFlags to 8 entries of 300 characters each.
-- [ ] Run the focused tests and confirm failure due to missing implementation.
-- [ ] Implement parseAnalysis and the JSON schema in analysis.ts. Prompt explicitly rejects screenshot instructions and defaults to uncertainty for inadequate evidence. Use /api/chat with stream:false, the schema as format, temperature:0, and a 120-second timeout; bound provider response reading to 64 KiB.
-- [ ] Write and run failing upload/route tests covering empty files, files over 8 MiB, signature/type mismatch, corrupt image data, decoded images over 20 megapixels, cross-origin requests, oversized multipart bodies, malformed provider JSON, non-2xx provider status, and timeout. Assert errors never include a verdict or raw provider details.
-- [ ] Implement bounded request-body reading (8 MiB plus 64 KiB multipart allowance), exact one-file extraction, same-origin checks, image validation, no-store responses, and user-readable error mapping. Keep the Ollama target fixed server-side.
-- [ ] Run all focused tests and type checking; expect successful exits. Inspect and commit with `feat: add validated local screenshot analysis`.
+- [x] Set up a minimal Next.js TypeScript project and scripts for development on 127.0.0.1, production build, type checking, and focused tests. Use sharp for actual image decoding and dimensions rather than trusting MIME headers alone.
+- [x] Write failing tests: `rejectsUnknownVerdict` asserts “safe” is rejected; `rejectsExtraFields` asserts extra properties fail; `replacesGeneratedAction` asserts returned action is reviewed text; `rejectsInvalidShape` covers missing, empty, and oversized fields. Bound summary/action to 1,200 characters, redFlags to 8 entries of 300 characters each.
+- [x] Run the focused tests and confirm failure due to missing implementation.
+- [x] Implement parseAnalysis and the JSON schema in analysis.ts. Prompt explicitly rejects screenshot instructions and defaults to uncertainty for inadequate evidence. Use /api/chat with stream:false, the schema as format, temperature:0, and a 120-second timeout; bound provider response reading to 64 KiB.
+- [x] Write and run failing upload/route tests covering empty files, files over 8 MiB, signature/type mismatch, corrupt image data, decoded images over 20 megapixels, cross-origin requests, oversized multipart bodies, malformed provider JSON, non-2xx provider status, and timeout. Assert errors never include a verdict or raw provider details.
+- [x] Implement bounded request-body reading (8 MiB plus 64 KiB multipart allowance), exact one-file extraction, same-origin checks, image validation, no-store responses, and user-readable error mapping. Keep the Ollama target fixed server-side.
+- [x] Run all focused tests and type checking; expect successful exits. Inspect and commit with `feat: add validated local screenshot analysis`.
 
 ## Task 2: Accessible single-page experience
 
@@ -54,11 +54,11 @@
 
 **Interfaces:** Consumes the Task 1 POST endpoint and Analysis type. Produces the full selection → preview → analysis → result → clear/retry flow.
 
-- [ ] Build the root layout with local system fonts and page metadata. Build a responsive page with a calm warm palette, large readable text, native image input, drop area, preview, explicit analysis button, loading status, and result sections.
-- [ ] Map verdicts to the exact approved display labels. Always show the legitimacy disclaimer; emphasize it for no_obvious_red_flags. Render all model content as plain React text. Show “No specific red flags were identified” for an empty list without implying legitimacy.
-- [ ] Use request cancellation plus a request identity guard to prevent stale results. Revoke image object URLs on replacement/unmount. Disable duplicate analysis and clear stale results when selection changes. Surface errors in a live region with retry available.
-- [ ] Add browser tests using controlled responses: select a valid fixture, analyze, assert each verdict and section; reject an unsupported file; simulate network error and retry; replace/clear during a delayed response and assert no stale result; complete selection and analysis with keyboard navigation. Verify drag-and-drop through an actual File payload.
-- [ ] Run browser tests and review desktop/mobile screenshots for legibility, visible focus, overflow, loading, and error appearance. Commit with `feat: add approachable screenshot checker page`.
+- [x] Build the root layout with local system fonts and page metadata. Build a responsive page with a calm warm palette, large readable text, native image input, drop area, preview, explicit analysis button, loading status, and result sections.
+- [x] Map verdicts to the exact approved display labels. Always show the legitimacy disclaimer; emphasize it for no_obvious_red_flags. Render all model content as plain React text. Show “No specific red flags were identified” for an empty list without implying legitimacy.
+- [x] Use request cancellation plus a request identity guard to prevent stale results. Revoke image object URLs on replacement/unmount. Disable duplicate analysis and clear stale results when selection changes. Surface errors in a live region with retry available.
+- [x] Add browser tests using controlled responses: select a valid fixture, analyze, assert each verdict and section; reject an unsupported file; simulate network error and retry; replace/clear during a delayed response and assert no stale result; complete selection and analysis with keyboard navigation. Verify drag-and-drop through an actual File payload.
+- [x] Run browser tests and review desktop/mobile screenshots for legibility, visible focus, overflow, loading, and error appearance. Commit with `feat: add approachable screenshot checker page`.
 
 ## Task 3: Representative fixtures, live verification, and README
 
@@ -66,11 +66,11 @@
 
 **Interfaces:** Fixtures are synthetic images with no personal data; the live verification script consumes the same endpoint used by the page.
 
-- [ ] Create legible synthetic screenshot fixtures with a delivery-fee phishing request, ordinary appointment notification, and incomplete urgent message. Add adversarial screenshot text to an additional fixture if needed to exercise prompt boundaries.
-- [ ] Check local Node, Ollama availability, and installed models. If gemma3:4b is available, send at least two fixtures through the running endpoint and record observed verdicts, reading quality, and limitations. If it is unavailable, preserve an executable live-check script and explicitly record that live inference is unverified; do not substitute mock evidence for model accuracy.
-- [ ] Write README setup instructions with supported Node version, official Ollama installation link, `ollama pull gemma3:4b`, dependency installation, and local run commands. Explain first-run latency, errors, no persistence versus temporary memory, local-only deployment assumptions, hallucination/prompt-injection limits, screenshot reading limitations, and the uncertainty principle.
-- [ ] Run tests, type checking, production build, and final diff review. Check final repository status; commit with `docs: document local setup and MVP verification`.
-- [ ] Report exact automated/browser/live-model evidence and remaining manual checks. Push only if a GitHub destination has been established; otherwise report the local repository and commit without claiming a remote exists.
+- [x] Create legible synthetic screenshot fixtures with a delivery-fee phishing request, ordinary appointment notification, and incomplete urgent message. Add adversarial screenshot text to an additional fixture if needed to exercise prompt boundaries.
+- [x] Check local Node, Ollama availability, and installed models. If gemma3:4b is available, send at least two fixtures through the running endpoint and record observed verdicts, reading quality, and limitations. If it is unavailable, preserve an executable live-check script and explicitly record that live inference is unverified; do not substitute mock evidence for model accuracy.
+- [x] Write README setup instructions with supported Node version, official Ollama installation link, `ollama pull gemma3:4b`, dependency installation, and local run commands. Explain first-run latency, errors, no persistence versus temporary memory, local-only deployment assumptions, hallucination/prompt-injection limits, screenshot reading limitations, and the uncertainty principle.
+- [x] Run tests, type checking, production build, and final diff review. Check final repository status; commit with `docs: document local setup and MVP verification`.
+- [x] Report exact automated/browser/live-model evidence and remaining manual checks. Push only if a GitHub destination has been established; otherwise report the local repository and commit without claiming a remote exists.
 
 ## Execution recommendation
 

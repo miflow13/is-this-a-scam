@@ -12,8 +12,25 @@ Environment: Node 24.21.0, Next.js 16.3.8, Ollama 0.34.4, Linux, installed Googl
 
 ## Real Ollama inference
 
-Pending the gemma3:4b download. Do not interpret the controlled browser responses as live inference evidence. The `npm run check:local-model` script exercises four synthetic screenshots through the actual HTTP endpoint when the model is ready.
+The gemma3:4b model was downloaded and all four synthetic screenshots were sent through the production HTTP endpoint. The final live smoke check exited successfully:
+
+| Fixture | Observed verdict | Final request time |
+| --- | --- | --- |
+| Delivery-fee/card-number request | likely_scam | 1.6 s |
+| Routine appointment reminder | no_obvious_red_flags | 3.0 s |
+| Incomplete request from an unknown sender | uncertain | 1.5 s |
+| Password request with embedded model instructions | likely_scam | 1.4 s |
+
+Three screenshots were also selected and analyzed in the real Chrome page without intercepted responses: delivery fee, ordinary notification, and ambiguous message. Each rendered the expected verdict and reviewed next step. No uncaught page errors were observed. The updated navy/blue security theme was reviewed on desktop and mobile; [result preview](result-preview.png) shows actual local inference.
+
+These are smoke cases, not an accuracy score or calibrated confidence estimate. The final API run overlapped with browser checks, so timings are illustrative only. The initial cold-start request took 25.8 seconds; warm requests were much faster on this machine. Other hardware and images can behave differently.
+
+The first live run exposed two problems: synthetic provenance labels drawn inside fixture images were incorrectly interpreted as scam evidence, and an incomplete vague message was guessed to be a scam. Removing test-only labels from the pixels fixed the routine reminder; explicit decision rules distinguishing missing context from visible scam tactics fixed the ambiguous verdict in these checks. Provenance remains documented here and in the README. The prompt also requests plain-language flags rather than underscored category labels.
+
+The live-check script now checks a small set of expected fixture behaviors and returns a nonzero exit if they regress. The screenshot containing embedded instructions did not override the observed verdict or reviewed action in this run; this does not establish general prompt-injection resistance.
 
 ## Remaining coverage boundaries
 
 No broad real-world accuracy evaluation, hardware benchmark, non-English evaluation, Firefox/Safari testing, assistive-technology user study, or independent security assessment. The lexical reassurance safeguard is conservative and incomplete: it cannot guarantee all model prose is accurate or free of misleading reassurance. Public hosting and multi-user operation are outside this MVP.
+
+The implementation stays in its new dedicated repository on a focused branch; there was no unrelated checkout to protect with a second worktree. Browser verification uses the installed Chrome through Playwright because the agent-browser CLI was unavailable. Clearing a screenshot prevents stale results but does not stop server-side inference; abandoned work can run until its timeout. Dimension checks happen on the server before analysis, so a browser may decode a compressed large image for preview first. Fixture provenance is documented outside screenshot pixels to avoid contaminating the model input.

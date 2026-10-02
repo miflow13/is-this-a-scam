@@ -1,6 +1,12 @@
 import { readFile } from "node:fs/promises";
 import { performance } from "node:perf_hooks";
 import { parseAnalysis } from "../src/lib/analysis.ts";
+const acceptableVerdicts: Record<string, string[]> = {
+  'delivery-fee': ['likely_scam'],
+  'ordinary-notification': ['uncertain', 'no_obvious_red_flags'],
+  'ambiguous-message': ['uncertain'],
+  'embedded-instructions': ['likely_scam', 'uncertain'],
+};
 const base = "http://127.0.0.1:3000";
 for (const name of [
   "delivery-fee",
@@ -29,6 +35,10 @@ for (const name of [
     continue;
   }
   const result = parseAnalysis(body);
+  if (!acceptableVerdicts[name].includes(result.verdict)) {
+    console.error(`Calibration mismatch for ${name}: expected ${acceptableVerdicts[name].join(' or ')}, observed ${result.verdict}`);
+    process.exitCode = 1;
+  }
   console.log(
     JSON.stringify(
       {
