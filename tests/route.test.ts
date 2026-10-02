@@ -86,3 +86,32 @@ test("returns only validated results with no-store; provider errors never look l
     globalThis.fetch = realFetch;
   }
 });
+
+test("accepts the browser loopback Host when Next normalizes the internal URL", async () => {
+  const realFetch = globalThis.fetch;
+  try {
+    globalThis.fetch = async () =>
+      Response.json({
+        message: {
+          content: JSON.stringify({
+            verdict: "uncertain",
+            summary: "The message is incomplete.",
+            redFlags: [],
+            recommendedAction: "Ask someone you trust.",
+          }),
+        },
+      });
+    const original = await request();
+    original.headers.set("host", "127.0.0.1:3000");
+    const normalized = new Request(
+      "http://localhost:3000/api/analyze",
+      original,
+    );
+    assert.equal((await POST(normalized)).status, 200);
+    normalized.headers.set("host", "rebinding.example:3000");
+    normalized.headers.set("origin", "http://rebinding.example:3000");
+    assert.equal((await POST(normalized)).status, 403);
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});

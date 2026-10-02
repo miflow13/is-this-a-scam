@@ -10,8 +10,18 @@ function json(data: unknown, status = 200) {
 }
 export async function POST(request: Request): Promise<Response> {
   try {
+    // Next.js may normalize request.url to localhost. The browser's Host
+    // remains the origin it actually opened; only explicit loopback hosts qualify.
+    const internalUrl = new URL(request.url);
+    const host = request.headers.get("host") ?? internalUrl.host;
+    const loopbackHost =
+      /^(?:localhost|127\.0\.0\.1|\[::1\])(?::\d{1,5})?$/i.test(host);
+    const expectedOrigin = loopbackHost
+      ? new URL(`${internalUrl.protocol}//${host}`).origin
+      : null;
     if (
-      request.headers.get("origin") !== new URL(request.url).origin ||
+      !loopbackHost ||
+      request.headers.get("origin") !== expectedOrigin ||
       request.headers.get("sec-fetch-site") === "cross-site"
     )
       throw new AnalysisError(

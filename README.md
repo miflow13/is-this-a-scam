@@ -115,6 +115,10 @@ This sends the delivery-fee, ordinary-notification, ambiguous-message, and embed
 
 ## Weekend scope
 
-Built as a small project for a DEV Hacktoberfest Weekend 2026 submission: one page, one endpoint, local image analysis. No auth, database, history, agents, or separate OCR. Challenge eligibility and submission requirements must be checked against the official rules before submitting. No challenge submission or public deployment is included.
+Started October 2, 2026 for the [DEV Hacktoberfest Weekend Challenge: Build for a Friend](https://dev.to/challenges/hacktoberfest-weekend-2026-10-01). Scope: one page, one endpoint, local image analysis. No auth, database, history, agents, or separate OCR.
+
+The official prompt asks for a new project with open-source AI at its core, built for a real person. Local Ollama and the open-weight Gemma model are the core of this app. A submission still needs a DEV post using the official template: explain who it is for, show a demo, and explain why open innovation matters. Choose the actual loved one and describe their feedback rather than inventing a user story. The deadline is October 5, 2026 at 06:59 UTC (2:59 AM EDT). Check the official rules before submitting; no submission or public deployment has been made.
+
+Once the model is downloaded, local inference lets you analyze a screenshot without sending its contents to a remote model provider. That ownership and privacy rationale is central to this project, along with the explicit uncertainty verdict.
 
 MIT licensed. The Ollama model has its own license and terms; see [Gemma on Ollama](https://ollama.com/library/gemma3).

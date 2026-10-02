@@ -39,13 +39,11 @@ for (const [verdict, label] of results)
   });
 test("shows an upload error and lets the user recover", async ({ page }) => {
   await page.goto("/");
-  await page
-    .getByLabel("Choose a screenshot")
-    .setInputFiles({
-      name: "notes.txt",
-      mimeType: "text/plain",
-      buffer: Buffer.from("hello"),
-    });
+  await page.getByLabel("Choose a screenshot").setInputFiles({
+    name: "notes.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("hello"),
+  });
   await expect(
     page.getByRole("alert", { name: "Screenshot checker error" }),
   ).toContainText("PNG");
@@ -174,4 +172,31 @@ test("accepts a real file drop and has no horizontal overflow or page errors", a
     ),
   ).toBe(true);
   expect(errors).toEqual([]);
+});
+
+test("actual HTTP endpoint rejects corrupt image bytes without a verdict", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByLabel("Choose a screenshot")
+    .setInputFiles({
+      name: "broken.png",
+      mimeType: "image/png",
+      buffer: Buffer.from("not really an image"),
+    });
+  const received = page.waitForResponse("**/api/analyze");
+  await page.getByRole("button", { name: "Check this message" }).click();
+  const response = await received;
+  expect(response.status()).toBe(400);
+  expect(await response.json()).toEqual({
+    error:
+      "That image could not be read. Choose a clear PNG, JPG, or WebP screenshot.",
+  });
+  await expect(
+    page.getByRole("alert", { name: "Screenshot checker error" }),
+  ).toContainText("could not be read");
+  await expect(
+    page.getByRole("heading", { name: "Likely scam", exact: true }),
+  ).toHaveCount(0);
 });
