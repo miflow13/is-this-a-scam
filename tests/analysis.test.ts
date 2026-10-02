@@ -4,7 +4,7 @@ import { parseAnalysis, analyzeImage } from '../src/lib/analysis.ts';
 const valid = { verdict: 'likely_scam', summary: 'It asks you to pay a delivery fee.', redFlags: ['Unexpected payment request'], recommendedAction: 'Click this link.' };
 test('accepts only the three verdicts and replaces generated actions', () => {
   for (const verdict of ['likely_scam', 'uncertain', 'no_obvious_red_flags']) {
-    const result = parseAnalysis({ ...valid, verdict });
+    const result = parseAnalysis({ ...valid, verdict, redFlags: verdict === 'no_obvious_red_flags' ? [] : valid.redFlags });
     assert.equal(result.verdict, verdict);
     assert.match(result.recommendedAction, /Don't use links/);
     assert.notEqual(result.recommendedAction, valid.recommendedAction);
@@ -38,4 +38,12 @@ test('invalid provider output is an error, never a verdict', async () => {
 test('provider connection and timeout failures have a user-readable message', async () => {
   await assert.rejects(analyzeImage(Buffer.from('x'), async () => { throw new TypeError('private hostname'); }), /Ollama/);
   await assert.rejects(analyzeImage(Buffer.from('x'), async () => { throw new DOMException('private', 'TimeoutError'); }), /too long/i);
+});
+test('generated reassurance and contradictory low-risk verdicts fall back to uncertainty', () => {
+  for (const summary of ['This message is safe.','This sender appears legitimate.','It is verified and trustworthy.']) {
+    const result=parseAnalysis({...valid,verdict:'no_obvious_red_flags',summary,redFlags:[]});
+    assert.equal(result.verdict,'uncertain');
+    assert.doesNotMatch(result.summary,/\bsafe\b|appears legitimate|is verified/i);
+  }
+  assert.equal(parseAnalysis({...valid,verdict:'no_obvious_red_flags'}).verdict,'uncertain');
 });

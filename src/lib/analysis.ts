@@ -25,6 +25,11 @@ export function parseAnalysis(value: unknown): Analysis {
   if (Object.keys(obj).length !== 4 || !fields.every(key => Object.hasOwn(obj,key))) throw invalid();
   if (obj.verdict !== 'likely_scam' && obj.verdict !== 'uncertain' && obj.verdict !== 'no_obvious_red_flags') throw invalid();
   if (!boundedText(obj.summary,1200) || !boundedText(obj.recommendedAction,1200) || !Array.isArray(obj.redFlags) || obj.redFlags.length > 8 || !obj.redFlags.every(flag => boundedText(flag,300))) throw invalid();
+  const generatedText = [obj.summary,...obj.redFlags].join(' ');
+  const reassurance = /\bsafe\b|\b(?:is|are|looks|seems|appears)\s+(?:(?:to be|completely|definitely|fully)\s+)?(?:legitimate|verified|trusted|trustworthy|authentic|genuine)\b/i;
+  if (reassurance.test(generatedText) || (obj.verdict === 'no_obvious_red_flags' && obj.redFlags.length > 0)) {
+    return {verdict:'uncertain',summary:'The message could not be assessed reliably. Ask someone you trust to check it with you.',redFlags:[],recommendedAction:actions.uncertain};
+  }
   // Generated advice never owns the trusted next step.
   return {verdict:obj.verdict,summary:obj.summary.trim(),redFlags:obj.redFlags.map(flag => flag.trim()),recommendedAction:actions[obj.verdict]};
 }
